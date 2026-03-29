@@ -4,8 +4,6 @@ Using the GLideN64 Plugin, the aspect ratio was set to 16:9,
 and the video resolution is set to 1920 x 1080.
 ]]--
 
--- NOTE* I am putting everything into this singular lua file for this prototype, further iterations will be split up into more files
-
 local screenWidth = client.screenwidth() -- initialized out here for the outside functions
 local screenHeight = client.screenheight() 
 
@@ -16,6 +14,7 @@ local startupFramesRemaining = 300 -- set to ~5 seconds at 60fps
 local showObjective = true
 local showHints = true
 local showGuideMarkers = true
+local showWalkthrough = true
 
 -- option menu states
 local prevLRCombo = false -- these two are used for l + r toggle
@@ -26,7 +25,8 @@ local selectedOption = 1
 local menuOptions = {
 	"Objective Widget",
 	"Context Hints",
-	"Guide Markers"
+	"Guide Markers",
+    "Walkthrough"
 }
 
 -- previous button states for edge detection
@@ -64,6 +64,8 @@ local function getOptionState(index) -- returns ON/OFF text for each option
         return showHints
     elseif index == 3 then
         return showGuideMarkers
+    elseif index == 4 then
+        return showWalkthrough
     end
     return false
 end
@@ -76,6 +78,8 @@ local function toggleSelectedOption(index) -- flips the selected option
         showHints = not showHints
     elseif index == 3 then
         showGuideMarkers = not showGuideMarkers
+    elseif index == 4 then
+        showWalkthrough = not showWalkthrough
     end
 end
 
@@ -116,8 +120,13 @@ local function drawWidgets() -- example widgets
     end
 
     if showGuideMarkers then
-        gui.text(screenWidth - 300, 60, "Guide Marker: Active")
+        gui.text(screenWidth - 300, screenHeight / 1.65, "Guide Marker: Active")
     end
+
+    if showWalkthrough then
+    gui.text(screenWidth - 480, screenHeight - 140, "Walkthrough")
+    gui.text(screenWidth - 480, screenHeight - 120, "External OoT wiki / guide link here")
+end
 end
 
 while true do -- main
