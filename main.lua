@@ -11,10 +11,10 @@ local showStartupHint = true
 local startupFramesRemaining = 300 -- set to ~5 seconds at 60fps
 
 -- widget states
-local showObjective = true
-local showHints = true
-local showGuideMarkers = true
-local showWalkthrough = true
+local showObjective = false
+local showHints = false
+local showGuideMarkers = false
+local showWalkthrough = false
 
 -- option menu states
 local prevLRCombo = false -- these two are used for l + r toggle
