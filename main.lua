@@ -4,6 +4,8 @@ Using the GLideN64 Plugin, the aspect ratio was set to 16:9,
 and the video resolution is set to 1920 x 1080.
 ]]--
 
+local stages = require("stages")
+
 local screenWidth = client.screenwidth() -- initialized out here for the outside functions
 local screenHeight = client.screenheight() 
 
@@ -114,22 +116,22 @@ local function drawOverlayOptionsMenu()
     gui.text(menuX + 20, menuY + 210, "A: Toggle")
 end
 
-local function drawWidgets() -- example widgets
+local function drawWidgets()
     if showObjective then
-        gui.text(60, 80, "Objective: Enter the Deku Tree")
+        gui.text(60, 80, "Objective: " stages.getCurrentObjective())
     end
 
     if showHints then
-        gui.text(60, screenHeight - 80, "Hint: Visit the shop for a shield")
+        gui.text(60, screenHeight - 80, "Hint: " stages.getCurrentHint())
     end
 
     if showGuideMarkers then
-        gui.text(screenWidth - 300, screenHeight / 1.65, "Guide Marker: Active")
+        gui.text(screenWidth - 300, screenHeight / 1.65, "Guide Marker: " stages.getCurrentMarker())
     end
 
     if walkthroughPopupFrames > 0 then
-    gui.text(screenWidth - 480, screenHeight - 140, "Walkthrough")
-    gui.text(screenWidth - 480, screenHeight - 120, "Open OoT wiki / guide in browser")
+        gui.text(screenWidth - 480, screenHeight - 140, "Walkthrough")
+        gui.text(screenWidth - 480, screenHeight - 120, "Open OoT wiki / guide in browser")
     end
 end
 
@@ -155,6 +157,8 @@ while true do -- main
         toggleOverlayOptions = not toggleOverlayOptions
     end
     prevLRCombo = lrCombo
+
+    local state = stages.updateCurrentStage()
 
 	-- widgets are on by default
 	drawWidgets()
