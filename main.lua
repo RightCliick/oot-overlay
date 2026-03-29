@@ -14,7 +14,7 @@ local startupFramesRemaining = 300 -- set to ~5 seconds at 60fps
 local showObjective = false
 local showHints = false
 local showGuideMarkers = false
-local showWalkthrough = false
+local walkthroughPopupFrames = 0
 
 -- option menu states
 local prevLRCombo = false -- these two are used for l + r toggle
@@ -65,7 +65,7 @@ local function getOptionState(index) -- returns ON/OFF text for each option
     elseif index == 3 then
         return showGuideMarkers
     elseif index == 4 then
-        return showWalkthrough
+        return nil
     end
     return false
 end
@@ -78,9 +78,11 @@ local function toggleSelectedOption(index) -- flips the selected option
         showHints = not showHints
     elseif index == 3 then
         showGuideMarkers = not showGuideMarkers
-    elseif index == 4 then
-        showWalkthrough = not showWalkthrough
     end
+end
+
+local function triggerWalkthroughPopup() -- specifically for walkthrough popup
+    walkthroughPopupFrames = 180
 end
 
 local function drawOverlayOptionsMenu()
@@ -97,12 +99,14 @@ local function drawOverlayOptionsMenu()
             prefix = "> "
         end
 
-        local stateText = "OFF"
-        if getOptionState(i) then
-            stateText = "ON"
-        end
+        local state = getOptionState(i)
 
-        gui.text(menuX + 20, menuY + 40 + (i * 20), prefix .. menuOptions[i] .. " [" .. stateText .. "]")
+        if state == nil then
+            gui.text(menuX + 20, menuY + 40 + (i * 20), prefix .. menuOptions[i])
+        else
+            local stateText = state and "ON" or "OFF"
+            gui.text(menuX + 20, menuY + 40 + (i * 20), prefix .. menuOptions[i] .. " [" .. stateText .. "]")
+        end
     end
 
     gui.text(menuX + 20, menuY + 180, "L+R: Open/Close")
@@ -123,10 +127,10 @@ local function drawWidgets() -- example widgets
         gui.text(screenWidth - 300, screenHeight / 1.65, "Guide Marker: Active")
     end
 
-    if showWalkthrough then
+    if walkthroughPopupFrames > 0 then
     gui.text(screenWidth - 480, screenHeight - 140, "Walkthrough")
-    gui.text(screenWidth - 480, screenHeight - 120, "External OoT wiki / guide link here")
-end
+    gui.text(screenWidth - 480, screenHeight - 120, "Open OoT wiki / guide in browser")
+    end
 end
 
 while true do -- main
@@ -182,8 +186,12 @@ while true do -- main
         end
 
         if aPressed and not prevA then
-            toggleSelectedOption(selectedOption)
+            if selectedOption == 4 then
+                triggerWalkthroughPopup()
+            else
+                toggleSelectedOption(selectedOption)
         end
+end
 
         prevUp = upPressed
         prevDown = downPressed
@@ -195,6 +203,10 @@ while true do -- main
         prevUp = false
         prevDown = false
         prevA = false
+    end
+
+    if walkthroughPopupFrames > 0 then -- decrement for walkthrough check
+    walkthroughPopupFrames = walkthroughPopupFrames - 1
     end
 
 	emu.frameadvance();
