@@ -5,6 +5,7 @@ and the video resolution is set to 1920 x 1080.
 ]]--
 
 local stages = require("stages")
+local game_state = require("game_state")
 
 local screenWidth = client.screenwidth() -- initialized out here for the outside functions
 local screenHeight = client.screenheight() 
@@ -118,15 +119,15 @@ end
 
 local function drawWidgets()
     if showObjective then
-        gui.text(60, 80, "Objective: " stages.getCurrentObjective())
+        gui.text(60, 80, "Objective: " .. stages.getCurrentObjective())
     end
 
     if showHints then
-        gui.text(60, screenHeight - 80, "Hint: " stages.getCurrentHint())
+        gui.text(60, screenHeight - 80, "Hint: " .. stages.getCurrentHint())
     end
 
     if showGuideMarkers then
-        gui.text(screenWidth - 300, screenHeight / 1.65, "Guide Marker: " stages.getCurrentMarker())
+        gui.text(screenWidth - 300, screenHeight / 1.65, "Guide Marker: " .. stages.getCurrentMarker())
     end
 
     if walkthroughPopupFrames > 0 then
@@ -158,7 +159,15 @@ while true do -- main
     end
     prevLRCombo = lrCombo
 
-    local state = stages.updateCurrentStage()
+    game_state.printDomainsOnce() -- gamestate debug
+    local state = game_state.read()
+    stages.updateCurrentStage(state)
+
+    gui.text(40, 140, "Has Sword: " .. tostring(state.hasSword))
+    gui.text(40, 160, "Has Shield: " .. tostring(state.hasShield))
+    gui.text(40, 180, string.format("Raw Sword/Shield Byte: %02X", state.rawSwordShield))
+    gui.text(40, 200, "Stage: " .. stages.currentStage)
+    
 
 	-- widgets are on by default
 	drawWidgets()

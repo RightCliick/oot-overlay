@@ -1,14 +1,8 @@
 local stages = {}
 
-stages.currentStage = "kokiri_start"
+stages.currentStage = "need_sword"
 
 stages.stageContent = {
-    kokiri_start = { -- on start of game
-        objective = "Talk to Kokiri and get ready to visit the Great Deku Tree.",
-        hint = "You will need equipment before moving forward.",
-        marker = "Village center"
-    },
-
     need_sword = {
         objective = "Find the Kokiri Sword.",
         hint = "Check the training area maze for something useful.",
@@ -40,17 +34,6 @@ function stages.getCurrentMarker()
     return stages.stageContent[stages.currentStage].marker
 end
 
-function stages.readGameState()
-    local state = {}
-
-    state.entranceIndex = 0
-    state.savedSceneIndex = 0
-    state.hasSword = false
-    state.hasShield = false
-
-    return state
-end
-
 function stages.determineStage(state)
     if not state.hasSword then
         return "need_sword"
@@ -61,10 +44,8 @@ function stages.determineStage(state)
     end
 end
 
-function stages.updateCurrentStage()
-    local state = stages.readGameState()
+function stages.updateCurrentStage(state)
     stages.currentStage = stages.determineStage(state)
-    return state
 end
 
 return stages
