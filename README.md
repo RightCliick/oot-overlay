@@ -17,7 +17,11 @@ Step 7: Click on tools, then on "Lua Console"
 Step 8: Click on open script, and navigate to the installation of the main.lua file provided by the release folder  
 Step 9: Click the checkmark to run the script, and now the overlay will be working.  
 
-Tasks:
+# Information:  
+
+Currently, the overlay functions, toggles, and displays work as intended. However, the function of automatically changing the displayed information based on player activity has been very difficult to implement, so rather than the hint information displaying and changing automatically, manual input is required to progress. 
+
+# Tasks:
 Toggle widgets  
 Acquire the Kokiri Sword  
 Acquire the Deku Shield  
