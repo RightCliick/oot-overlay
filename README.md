@@ -2,7 +2,7 @@
 
 ## SETUP REQUIREMENTS:
 
-A game-compatible controller
+A game-compatible controller (HIGHLY RECOMMENDED, the game does not feel great to use without it)    
 A windows computer (BizHawk is NOT currently compatible with MacOS)  
 [Bizhawk Install](https://tasvideos.org/Bizhawk)  
 [Legend of Zelda: Ocarina of Time ROM](https://www.romsgames.net/nintendo-64-rom-legend-of-zelda-the---ocarina-of-time-v12/)  
@@ -16,6 +16,8 @@ Step 6: Click on plugins, and change Video Resolution to "Custom", with the widt
 Step 7: Click on tools, then on "Lua Console"  
 Step 8: Click on open script, and navigate to the installation of the main.lua file provided by the release folder  
 Step 9: Click the checkmark to run the script, and now the overlay will be working.  
+
+Whoever would like to use this prototype can contact me and ask to use my setup in order to avoid this tedious setup process, as well as use a controller.
 
 # Information:  
 
