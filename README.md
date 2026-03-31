@@ -17,7 +17,7 @@ Step 7: Click on open script, and navigate to the installation of the lua file p
 Step 8: Click the checkmark to run the script, and now the overlay will be working.  
 
 Tasks:
-Toggle widgets
-Acquire the Kokiri Sword
-Acquire the Deku Shield
-Enter the Great Deku Tree
+Toggle widgets  
+Acquire the Kokiri Sword  
+Acquire the Deku Shield  
+Enter the Great Deku Tree  
