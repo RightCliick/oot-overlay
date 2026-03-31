@@ -3,7 +3,7 @@
 ## SETUP REQUIREMENTS:
 
 A game-compatible controller
-A windows computer (BizHawk is NOT currently compatible with MacOS)
+A windows computer (BizHawk is NOT currently compatible with MacOS)  
 [Bizhawk Install](https://tasvideos.org/Bizhawk)  
 [Legend of Zelda: Ocarina of Time ROM](https://www.romsgames.net/nintendo-64-rom-legend-of-zelda-the---ocarina-of-time-v12/)  
 
