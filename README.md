@@ -19,7 +19,7 @@ Step 9: Click the checkmark to run the script, and now the overlay will be worki
 
 # Information:  
 
-Currently, the overlay functions, toggles, and displays work as intended. However, the function of automatically changing the displayed information based on player activity has been very difficult to implement, so rather than the hint information displaying and changing automatically, manual input is required to progress. 
+Currently, the overlay functions, toggles, and displays work as intended. However, the function of automatically changing the displayed information based on player activity has been very difficult to implement, so rather than the hint information displaying and changing automatically, manual input is required to progress. For example, one of the first tasks is to "acquire the Kokiri Sword". The overlay will not continue onto tell the player to "Acquire the Deku Shield" until the "next objective" function is used.
 
 # Tasks:
 Toggle widgets  
