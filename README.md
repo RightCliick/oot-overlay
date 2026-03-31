@@ -7,9 +7,10 @@ A windows computer (BizHawk is NOT currently compatible with MacOS)
 [Bizhawk Install](https://tasvideos.org/Bizhawk)
 [Legend of Zelda: Ocarina of Time ROM](https://www.romsgames.net/nintendo-64-rom-legend-of-zelda-the---ocarina-of-time-v12/)
 
-Step 1: Install Bizhawk  
-Step 2: Install the ROM  
-Step 3: Open EmuHawk within the downloaded Bizhawk zip  
+Step 1: Download the Bizhawk installation from the provided link above, and extract the folder.  
+Step 2: Download the Game ROM from the provided link above, and extract the folder
+Step 3: Download the most recent release version of the prototype, on the right side of this repo (under releases tab)
+Step 3: Open EmuHawk within the extracted Bizhawk zip  
 Step 4: Drag the ROM into the EmuHawk window  
 Step 5: Click on plugins, and change Video Resolution to "Custom", with the width being 1920 and height being 1080, then click save  
 Step 6: Click on tools, then on "Lua Console"  
