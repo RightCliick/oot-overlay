@@ -1,4 +1,4 @@
-# An overlay for Legend of Zelda: Ocarina of Time, ran on Bizhawk 
+# An overlay for Legend of Zelda: Ocarina of Time, ran on Bizhawk & written in Lua
 
 ## SETUP REQUIREMENTS:
 
