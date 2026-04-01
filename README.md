@@ -21,6 +21,8 @@ Whoever would like to use this prototype can contact me and ask to use my setup 
 
 # Information:  
 
+THIS PROTOTYPE IS ONLY FOR LITERALLY THE VERY BEGINNING, FROM THE START OF THE GAME UP TO THE START OF THE FIRST DUNGEON  
+
 Currently, the overlay functions, toggles, and displays work as intended. However, the function of automatically changing the displayed information based on player activity has been very difficult to implement, so rather than the hint information displaying and changing automatically, manual input is required to progress. For example, one of the first tasks is to "acquire the Kokiri Sword". The overlay will not continue onto tell the player to "Acquire the Deku Shield" until the "next objective" function is used.
 
 # Tasks:
