@@ -1,3 +1,5 @@
+-- THIS FILE IS NO LONGER IN USE, I DIDNT WANNA DO ANY MORE MEMORY READING STUFF AND I'VE PIVOTED TO MANUAL CHANGING
+
 local game_state = {}
 
 local printedDomains = false
@@ -19,11 +21,6 @@ end
 function game_state.read()
     local state = {}
 
-    -- Replace this with the correct domain after you print and verify it.
-    -- Common candidate for N64 is often "RDRAM", but confirm in your setup first.
-    -- memory.usememorydomain("RDRAM")
-
-    -- TEMP: placeholder values until the correct offset is confirmed
     local swordShieldByte = 0x00
 
     state.rawSwordShield = swordShieldByte

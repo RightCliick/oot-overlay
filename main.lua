@@ -5,13 +5,20 @@ and the video resolution is set to 1920 x 1080.
 ]]--
 
 local stages = require("stages")
-local game_state = require("game_state")
+
+local prevCUp = false -- edge detection for debugging
+local prevCRight = false
+local prevCDown = false
 
 local screenWidth = client.screenwidth() -- initialized out here for the outside functions
 local screenHeight = client.screenheight() 
 
 local showStartupHint = true
 local startupFramesRemaining = 300 -- set to ~5 seconds at 60fps
+
+-- debug states
+local showInputDebug = false
+local prevDebugCombo = false
 
 -- widget states
 local showObjective = false
@@ -52,6 +59,11 @@ function showJoypadInput() -- draws controller inputs at top of screen
 	end
 end
 
+function showScreenHeight()
+    gui.text (screenWidth / 2, screenHeight / 2, "X = " .. screenWidth) -- debug grab screen height
+    gui.text (screenWidth / 2, (screenHeight / 2) - 15, "Y = " .. screenHeight)
+end
+
 local function applyDeadzone(value, threshold) -- deadzone function because my controller sucks
     if math.abs(value) < threshold then
         return 0
@@ -89,7 +101,7 @@ local function triggerWalkthroughPopup() -- specifically for walkthrough popup
 end
 
 local function drawOverlayOptionsMenu()
-    local menuX = screenWidth - 420
+    local menuX = screenWidth / 16
     local menuY = 180
     local menuWidth = 360
     local menuHeight = 220
@@ -115,6 +127,36 @@ local function drawOverlayOptionsMenu()
     gui.text(menuX + 20, menuY + 180, "L+R: Open/Close")
     gui.text(menuX + 20, menuY + 195, "Up/Down: Move")
     gui.text(menuX + 20, menuY + 210, "A: Toggle")
+    gui.text(menuX + 20, menuY + 225, "C Up: Next Objective")
+    gui.text(menuX + 20, menuY + 240, "C Right: Previous Objective")
+    gui.text(menuX + 20, menuY + 270, "Note: if the map disappears,")
+    gui.text(menuX + 20, menuY + 285, "press the L button again!")
+
+end
+
+local function getMapConstraint() -- constrains the map size to the screen size
+
+    local mapWidth = screenWidth * 0.26 -- these numbers took a LOT of trial and error oh my goodness)
+    local mapHeight = screenHeight * 0.22
+    local mapX = screenWidth * 0.62
+    local mapY = screenHeight * 0.66
+
+    return {
+        x = mapX,
+        y = mapY,
+        width = mapWidth,
+        height = mapHeight
+    }
+end
+
+local function drawStageMarker() -- draws map markers
+    local map = getMapConstraint()
+    local markerXPercent, markerYPercent = stages.getCurrentMarkerPosition()
+
+    local markerX = map.x + (markerXPercent * map.width)
+    local markerY = map.y + (markerYPercent * map.height)
+
+    gui.text(markerX, markerY, "!")
 end
 
 local function drawWidgets()
@@ -127,16 +169,18 @@ local function drawWidgets()
     end
 
     if showGuideMarkers then
-        gui.text(screenWidth - 300, screenHeight / 1.65, "Guide Marker: " .. stages.getCurrentMarker())
+        gui.text(screenWidth - 300, screenHeight / 1.65, "! = important!" )
+        drawStageMarker()
     end
 
     if walkthroughPopupFrames > 0 then
-        gui.text(screenWidth - 480, screenHeight - 140, "Walkthrough")
-        gui.text(screenWidth - 480, screenHeight - 120, "Open OoT wiki / guide in browser")
+        gui.text(screenWidth - 480, screenHeight - 140, "Walkthrough function WIP")
+        gui.text(screenWidth - 480, screenHeight - 120, "Good source: ZeldaDungeon.net")
     end
 end
 
 while true do -- main
+
 	local pad = joypad.getimmediate(1)
 
 	local screenWidth = client.screenwidth() -- these two are also needed in the loop because changing screensize is a big no no without this apparently
@@ -144,7 +188,23 @@ while true do -- main
 
 	gui.clearGraphics() -- need this in loop because every draw rectangle decides to linger for funsies (thanks lua)
 	
-	showJoypadInput()
+
+    -- debug, show controller inputs with DPAD L + A + Z
+    local dpadLeftPressed = pad["DPad L"] or false
+    local aPressedForDebug = pad["A"] or false
+    local zPressed = pad["Z"] or false
+
+    local debugCombo = dpadLeftPressed and aPressedForDebug and zPressed
+
+    if debugCombo and not prevDebugCombo then
+        showInputDebug = not showInputDebug
+    end
+
+    prevDebugCombo = debugCombo
+    
+	if showInputDebug then
+    showJoypadInput()
+    end
 
     local xAxis = applyDeadzone(pad["X Axis"] or 0, 20)
     local yAxis = applyDeadzone(pad["Y Axis"] or 0, 20)
@@ -153,21 +213,26 @@ while true do -- main
 	local lPressed = pad["L"] or false
     local rPressed = pad["R"] or false
     local lrCombo = lPressed and rPressed
-
     if lrCombo and not prevLRCombo then
         toggleOverlayOptions = not toggleOverlayOptions
     end
     prevLRCombo = lrCombo
 
-    game_state.printDomainsOnce() -- gamestate debug
-    local state = game_state.read()
-    stages.updateCurrentStage(state)
+    local cUpPressed = pad["C Up"] or false
+    local cDownPressed = pad["C Down"] or false
 
-    gui.text(40, 140, "Has Sword: " .. tostring(state.hasSword))
-    gui.text(40, 160, "Has Shield: " .. tostring(state.hasShield))
-    gui.text(40, 180, string.format("Raw Sword/Shield Byte: %02X", state.rawSwordShield))
-    gui.text(40, 200, "Stage: " .. stages.currentStage)
-    
+    if cUpPressed and not prevCUp then
+        stages.nextStage()
+    end
+
+    if cDownPressed and not prevCDown then
+        stages.previousStage()
+    end
+
+    prevCUp = cUpPressed
+    prevCDown = cDownPressed
+
+    -- gui.text(40, 150, "Stage #: " .. stages.currentIndex) -- debug for stage index
 
 	-- widgets are on by default
 	drawWidgets()
@@ -178,8 +243,8 @@ while true do -- main
 		startupFramesRemaining = startupFramesRemaining - 1
 	end
 
-	-- menu only works while menu is open 
 	if toggleOverlayOptions then
+
         local upPressed = pad["DPad U"] or false
         local downPressed = pad["DPad D"] or false
         local aPressed = pad["A"] or false
@@ -217,6 +282,7 @@ end
         prevDown = false
         prevA = false
     end
+
 
     if walkthroughPopupFrames > 0 then -- decrement for walkthrough check
     walkthroughPopupFrames = walkthroughPopupFrames - 1

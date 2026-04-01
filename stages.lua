@@ -1,51 +1,60 @@
 local stages = {}
 
-stages.currentStage = "need_sword"
-
-stages.stageContent = {
-    need_sword = {
-        objective = "Find the Kokiri Sword.",
-        hint = "Check the training area maze for something useful.",
-        marker = "Sword training area"
+stages.stageList = {
+    {
+        objective = "Talk to Mido!", -- State 1
+        hint = "Find Mido and interact with him!",
+        markerX = 0.42,
+        markerY = 0.62
     },
 
-    need_shield = {
-        objective = "Get a Deku Shield.",
-        hint = "The shop may have the equipment you need.",
-        marker = "Kokiri Shop"
+    {
+        objective = "Find the sword!", -- State 2
+        hint = "Find the sword training area, and explore the maze!",
+        markerX = 0.16,
+        markerY = 0.72
     },
 
-    ready_for_deku_tree = {
-        objective = "Go to the Great Deku Tree.",
-        hint = "You now have what you need to continue.",
-        marker = "Great Deku Tree entrance"
+    {
+        objective = "Buy the shield!", -- State 3
+        hint = "Explore the village to acquire 40 rupees!",
+        markerX = 0.36,
+        markerY = 0.42
+    },
+
+    {
+        objective = "Talk to Mido again!", -- State 4
+        hint = "Go back to Mido!",
+        markerX = 0.42,
+        markerY = 0.62
     }
 }
 
+stages.currentIndex = 1
+
 function stages.getCurrentObjective()
-    return stages.stageContent[stages.currentStage].objective
+    return stages.stageList[stages.currentIndex].objective
 end
 
 function stages.getCurrentHint()
-    return stages.stageContent[stages.currentStage].hint
+    return stages.stageList[stages.currentIndex].hint
 end
 
-function stages.getCurrentMarker()
-    return stages.stageContent[stages.currentStage].marker
+function stages.getCurrentMarkerPosition()
+    local stage = stages.stageList[stages.currentIndex]
+    return stage.markerX, stage.markerY
 end
 
-function stages.determineStage(state)
-    if not state.hasSword then
-        return "need_sword"
-    elseif not state.hasShield then
-        return "need_shield"
-    else
-        return "ready_for_deku_tree"
+function stages.nextStage()
+    if stages.currentIndex < #stages.stageList then
+        stages.currentIndex = stages.currentIndex + 1
     end
 end
 
-function stages.updateCurrentStage(state)
-    stages.currentStage = stages.determineStage(state)
+function stages.previousStage()
+    if stages.currentIndex > 1 then
+        stages.currentIndex = stages.currentIndex - 1
+    end
 end
 
 return stages
