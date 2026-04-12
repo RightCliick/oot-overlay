@@ -4,7 +4,15 @@ Using the GLideN64 Plugin, the aspect ratio was set to 16:9,
 and the video resolution is set to 1920 x 1080.
 ]]--
 
+package.loaded["widgets"] = nil -- makes bizhawk recache the other lua files on refresh
+package.loaded["stages"] = nil 
+package.loaded["menu"] = nil 
+package.loaded["map"] = nil 
+local widgets = require("widgets")
 local stages = require("stages")
+local menu = require("menu")
+local map = require("map")
+
 
 local prevCUp = false -- edge detection for debugging
 local prevCRight = false
@@ -21,9 +29,12 @@ local showInputDebug = false
 local prevDebugCombo = false
 
 -- widget states
-local showObjective = false
-local showHints = false
-local showGuideMarkers = false
+local widgetState = {
+    showObjective = false,
+    showHints = false,
+    showGuideMarkers = false
+}
+
 local walkthroughPopupFrames = 0
 
 -- option menu states
@@ -71,111 +82,27 @@ local function applyDeadzone(value, threshold) -- deadzone function because my c
     return value
 end
 
--- the next two functions are for the overlay toggles
-local function getOptionState(index) -- returns ON/OFF text for each option
-    if index == 1 then
-        return showObjective
-    elseif index == 2 then
-        return showHints
-    elseif index == 3 then
-        return showGuideMarkers
-    elseif index == 4 then
-        return nil
-    end
-    return false
-end
-
-
-local function toggleSelectedOption(index) -- flips the selected option
-    if index == 1 then
-        showObjective = not showObjective
-    elseif index == 2 then
-        showHints = not showHints
-    elseif index == 3 then
-        showGuideMarkers = not showGuideMarkers
-    end
-end
 
 local function triggerWalkthroughPopup() -- specifically for walkthrough popup
     walkthroughPopupFrames = 180
 end
 
-local function drawOverlayOptionsMenu()
-    local menuX = screenWidth / 16
-    local menuY = 180
-    local menuWidth = 360
-    local menuHeight = 220
-
-    gui.text(menuX + 20, menuY + 20, "Overlay Options")
-
-    for i = 1, #menuOptions do
-        local prefix = "  "
-        if i == selectedOption then
-            prefix = "> "
-        end
-
-        local state = getOptionState(i)
-
-        if state == nil then
-            gui.text(menuX + 20, menuY + 40 + (i * 20), prefix .. menuOptions[i])
-        else
-            local stateText = state and "ON" or "OFF"
-            gui.text(menuX + 20, menuY + 40 + (i * 20), prefix .. menuOptions[i] .. " [" .. stateText .. "]")
-        end
-    end
-
-    gui.text(menuX + 20, menuY + 180, "L+R: Open/Close")
-    gui.text(menuX + 20, menuY + 195, "Up/Down: Move")
-    gui.text(menuX + 20, menuY + 210, "A: Toggle")
-    gui.text(menuX + 20, menuY + 225, "C Up: Next Objective")
-    gui.text(menuX + 20, menuY + 240, "C Right: Previous Objective")
-    gui.text(menuX + 20, menuY + 270, "Note: if the map disappears,")
-    gui.text(menuX + 20, menuY + 285, "press the L button again!")
-
-end
-
-local function getMapConstraint() -- constrains the map size to the screen size
-
-    local mapWidth = screenWidth * 0.26 -- these numbers took a LOT of trial and error oh my goodness)
-    local mapHeight = screenHeight * 0.22
-    local mapX = screenWidth * 0.62
-    local mapY = screenHeight * 0.66
-
-    return {
-        x = mapX,
-        y = mapY,
-        width = mapWidth,
-        height = mapHeight
-    }
-end
-
-local function drawStageMarker() -- draws map markers
-    local map = getMapConstraint()
-    local markerXPercent, markerYPercent = stages.getCurrentMarkerPosition()
-
-    local markerX = map.x + (markerXPercent * map.width)
-    local markerY = map.y + (markerYPercent * map.height)
-
-    gui.text(markerX, markerY, "!")
-end
-
 local function drawWidgets()
-    if showObjective then
-        gui.text(60, 80, "Objective: " .. stages.getCurrentObjective())
+    if widgetState.showObjective then
+        widgets.drawObjective(stages)
     end
 
-    if showHints then
-        gui.text(60, screenHeight - 80, "Hint: " .. stages.getCurrentHint())
+    if widgetState.showHints then
+        widgets.drawHint(stages, screenHeight)
     end
 
-    if showGuideMarkers then
-        gui.text(screenWidth - 300, screenHeight / 1.65, "! = important!" )
-        drawStageMarker()
+    if widgetState.showGuideMarkers then
+        widgets.drawGuideMarkerLabel(screenWidth)
+        map.drawStageMarker(screenWidth, screenHeight, stages)
     end
 
     if walkthroughPopupFrames > 0 then
-        gui.text(screenWidth - 480, screenHeight - 140, "Walkthrough function WIP")
-        gui.text(screenWidth - 480, screenHeight - 120, "Good source: ZeldaDungeon.net")
+        widgets.drawWalkthroughPopup(screenWidth, screenHeight)
     end
 end
 
@@ -267,15 +194,15 @@ while true do -- main
             if selectedOption == 4 then
                 triggerWalkthroughPopup()
             else
-                toggleSelectedOption(selectedOption)
-        end
-end
+                menu.toggleSelectedOption(selectedOption, widgetState)
+            end
+    end
 
         prevUp = upPressed
         prevDown = downPressed
         prevA = aPressed
 
-        drawOverlayOptionsMenu()
+        menu.drawOverlayOptionsMenu(screenWidth, menuOptions, selectedOption, widgetState)
     else
         -- reset edge detection when menu is closed
         prevUp = false
