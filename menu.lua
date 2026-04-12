@@ -26,7 +26,7 @@ end
 
 function menu.drawOverlayOptionsMenu(screenWidth, menuOptions, selectedOption, state)
     local menuX = screenWidth * 0.0625
-    local menuY = 180
+    local menuY = screenHeight * 0.25
 
     gui.text(menuX + 20, menuY + 20, "Overlay Options")
 

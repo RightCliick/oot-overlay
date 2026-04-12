@@ -18,8 +18,8 @@ local prevCUp = false -- edge detection for debugging
 local prevCRight = false
 local prevCDown = false
 
-local screenWidth = client.screenwidth() -- initialized out here for the outside functions
-local screenHeight = client.screenheight() 
+screenWidth = client.screenwidth() -- initialized out here for the outside functions
+screenHeight = client.screenheight() 
 
 local showStartupHint = true
 local startupFramesRemaining = 300 -- set to ~5 seconds at 60fps

@@ -2,19 +2,19 @@ local widgets = {}
 
 -- Objective widget
 function widgets.drawObjective(stages)
-    gui.text(60, 80, "Objective: " .. stages.getCurrentObjective())
+    gui.text(screenWidth * 0.07, screenHeight * 0.12, "Objective: " .. stages.getCurrentObjective())
 end
 
 
 -- Hint widget
 function widgets.drawHint(stages, screenHeight)
-    gui.text(60, screenHeight - 80, "Hint: " .. stages.getCurrentHint())
+    gui.text(screenWidth * 0.07, screenHeight * 0.80, "Hint: " .. stages.getCurrentHint())
 end
 
 
 -- Guide marker label (not the marker itself)
 function widgets.drawGuideMarkerLabel(screenWidth)
-    gui.text(screenWidth - 320, 120, "Guide Marker: WIP")
+    gui.text(screenWidth * 0.83, screenHeight * 0.64, "Guide Marker: WIP")
 end
 
 
