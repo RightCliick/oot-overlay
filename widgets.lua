@@ -14,7 +14,7 @@ end
 
 -- Guide marker label (not the marker itself)
 function widgets.drawGuideMarkerLabel(screenWidth)
-    gui.text(screenWidth * 0.83, screenHeight * 0.64, "Guide Marker: WIP")
+    gui.text(screenWidth * 0.83, screenHeight * 0.64, "Guide Marker: ACTIVE")
 end
 
 
